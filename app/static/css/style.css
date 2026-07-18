@@ -1,0 +1,40 @@
+/* Custom styles on top of Tailwind */
+
+/* Smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* Toast animation */
+@keyframes slideIn {
+    from {
+        transform: translateX(100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+.toast-enter {
+    animation: slideIn 0.3s ease-out forwards;
+}
+
+.toast-exit {
+    animation: fadeOut 0.3s ease-out forwards;
+}
+
+/* Status Badge Colors mapping - mostly handled via JS class manipulation, but good to have fallback */
+.status-open { @apply bg-yellow-100 text-yellow-800; }
+.status-progress { @apply bg-blue-100 text-blue-800; }
+.status-closed { @apply bg-green-100 text-green-800; }

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Support CRM</title>
+    <!-- Use Tailwind CSS via CDN for rapid styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/static/css/style.css">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="bg-gray-50 text-gray-800 font-sans min-h-screen">
+    
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16 items-center">
+                <div class="flex-shrink-0 flex items-center cursor-pointer" onclick="window.location.href='/'">
+                    <i class="fa-solid fa-headset text-2xl mr-2"></i>
+                    <span class="font-bold text-xl">Support CRM</span>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        
+        <!-- Dashboard Stats Cards -->
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8" id="stats-container">
+            <!-- Populated by JS -->
+            <div class="bg-white p-6 rounded-lg shadow animate-pulse"><div class="h-10 bg-gray-200 rounded"></div></div>
+            <div class="bg-white p-6 rounded-lg shadow animate-pulse"><div class="h-10 bg-gray-200 rounded"></div></div>
+            <div class="bg-white p-6 rounded-lg shadow animate-pulse"><div class="h-10 bg-gray-200 rounded"></div></div>
+            <div class="bg-white p-6 rounded-lg shadow animate-pulse"><div class="h-10 bg-gray-200 rounded"></div></div>
+        </div>
+
+        <div class="flex flex-col md:flex-row justify-between items-center mb-6 space-y-4 md:space-y-0">
+            <!-- Search and Filter -->
+            <div class="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4 w-full md:w-auto">
+                <div class="relative text-gray-600 focus-within:text-gray-400">
+                    <span class="absolute inset-y-0 left-0 flex items-center pl-2">
+                        <i class="fa-solid fa-magnifying-glass p-1"></i>
+                    </span>
+                    <input type="text" id="searchInput" class="py-2 text-sm text-white bg-white rounded-md pl-10 focus:outline-none focus:bg-white focus:text-gray-900 border border-gray-300 text-gray-900 w-full sm:w-64 transition duration-300" placeholder="Search ID, Name, Email..." autocomplete="off">
+                </div>
+                
+                <select id="statusFilter" class="bg-white border border-gray-300 text-gray-900 text-sm rounded-md focus:ring-blue-500 focus:border-blue-500 block w-full sm:w-auto p-2.5">
+                    <option value="">All Statuses</option>
+                    <option value="Open">Open</option>
+                    <option value="In Progress">In Progress</option>
+                    <option value="Closed">Closed</option>
+                </select>
+            </div>
+            
+            <!-- Create Ticket Button -->
+            <button onclick="toggleModal('createTicketModal')" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded shadow transition duration-300 flex items-center">
+                <i class="fa-solid fa-plus mr-2"></i> New Ticket
+            </button>
+        </div>
+
+        <!-- Tickets Table -->
+        <div class="bg-white shadow rounded-lg overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">ID</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Subject</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th scope="col" class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Date</th>
+                            <th scope="col" class="relative px-6 py-3"><span class="sr-only">View</span></th>
+                        </tr>
+                    </thead>
+                    <tbody id="ticketsList" class="bg-white divide-y divide-gray-200">
+                        <!-- Populated by JS -->
+                        <tr><td colspan="6" class="px-6 py-4 text-center text-gray-500">Loading tickets...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <!-- Create Ticket Modal -->
+    <div id="createTicketModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 hidden overflow-y-auto h-full w-full flex items-center justify-center transition-opacity z-50">
+        <div class="relative bg-white rounded-lg shadow-xl w-full max-w-md p-6 transform transition-all">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-lg font-medium text-gray-900">Create New Ticket</h3>
+                <button onclick="toggleModal('createTicketModal')" class="text-gray-400 hover:text-gray-500 focus:outline-none">
+                    <i class="fa-solid fa-xmark text-xl"></i>
+                </button>
+            </div>
+            
+            <form id="createTicketForm" onsubmit="handleCreateTicket(event)">
+                <div class="mb-4">
+                    <label for="customer_name" class="block text-sm font-medium text-gray-700">Customer Name</label>
+                    <input type="text" id="customer_name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="customer_email" class="block text-sm font-medium text-gray-700">Customer Email</label>
+                    <input type="email" id="customer_email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="subject" class="block text-sm font-medium text-gray-700">Subject</label>
+                    <input type="text" id="subject" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border">
+                </div>
+                
+                <div class="mb-4">
+                    <label for="description" class="block text-sm font-medium text-gray-700">Description</label>
+                    <textarea id="description" rows="3" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm p-2 border"></textarea>
+                </div>
+                
+                <div class="flex justify-end space-x-3 mt-6">
+                    <button type="button" onclick="toggleModal('createTicketModal')" class="px-4 py-2 bg-gray-100 text-gray-700 rounded hover:bg-gray-200 transition duration-300">Cancel</button>
+                    <button type="submit" id="submitBtn" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition duration-300 flex items-center">
+                        <span>Create Ticket</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Notification Container -->
+    <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2"></div>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>
