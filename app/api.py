@@ -8,14 +8,14 @@ from app.database import get_db
 # Create a router for the API endpoints
 router = APIRouter(prefix="/api/tickets", tags=["tickets"])
 
-@router.post("/", response_model=schemas.TicketResponse)
+@router.post("", response_model=schemas.TicketResponse)
 def create_ticket(ticket: schemas.TicketCreate, db: Session = Depends(get_db)):
     """
     Create a new support ticket.
     """
     return crud.create_ticket(db=db, ticket=ticket)
 
-@router.get("/", response_model=List[schemas.TicketResponse])
+@router.get("", response_model=List[schemas.TicketResponse])
 def read_tickets(skip: int = 0, limit: int = 100, search: str = None, status: str = None, db: Session = Depends(get_db)):
     """
     Retrieve all tickets. Can be filtered by search term and status.
